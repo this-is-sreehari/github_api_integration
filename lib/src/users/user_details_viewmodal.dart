@@ -38,6 +38,12 @@ class UserDetailsViewModel extends GetxController {
           'X-GitHub-Api-Version': '2022-11-28'
       })
     );
-    return {'data': response.data, 'statusCode': response.statusCode};
+    List<dynamic> repos = [];
+    for (var item in response.data) {
+      UserRepository repo = UserRepository.fromJson(item);
+      repos.add(repo);
+    }
+
+    return {'data': repos, 'statusCode': response.statusCode};
   }
 }

@@ -52,7 +52,7 @@ class UserDetailsView extends StatelessWidget {
         } else if (snapshot.data != null) {
           Map<String, dynamic> dataMap = snapshot.data as Map<String, dynamic>;
           UserDetailsModel data = UserDetailsModel.fromJson(dataMap['data']);
-          print(data.name);
+
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -89,7 +89,7 @@ class UserDetailsView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
                       data.name ?? 'N/A',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
@@ -108,7 +108,7 @@ class UserDetailsView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
                       data.bio ?? 'N/A',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
@@ -128,7 +128,7 @@ class UserDetailsView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
                       data.publicRepos.toString(),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
@@ -138,10 +138,39 @@ class UserDetailsView extends StatelessWidget {
         } else {
           return const SizedBox();
         }
-        
       },
     )
-    : Text('Listing repos here');
+    : FutureBuilder(
+      future: viewModel.getAllRepositories(userName),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Sorry! Your API rate limit exceeded"));
+        } else if (snapshot.data != null) {
+          Map<String, dynamic> reposMap = snapshot.data as Map<String, dynamic>;
+          List<dynamic> repos = reposMap['data'];
+          
+          return ListView.builder(
+            itemCount: repos.length,
+            itemBuilder: (context, index) {
+              final repo = repos[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                elevation: 3,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: ListTile(
+                  title: Text(repo.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(repo.url, style: const TextStyle(fontWeight: FontWeight.normal)),
+                ),
+              );
+          });
+        } else {
+          return const SizedBox();
+        }
+        
+      },
+    );
   }
 }
 

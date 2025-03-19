@@ -27,7 +27,6 @@ class UserDetailsModel {
     required this.createdAt,
   });
 
-  /// Factory method to create an instance from JSON
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) {
     return UserDetailsModel(
       login: json['login'] ?? '',
@@ -43,31 +42,21 @@ class UserDetailsModel {
       createdAt: DateTime.parse(json['created_at']),
     );
   }
+}
 
-  /// Method to convert instance back to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'login': login,
-      'id': id,
-      'avatar_url': avatarUrl,
-      'name': name,
-      'company': company,
-      'blog': blog,
-      'location': location,
-      'email': email,
-      'bio': bio,
-      'public_repos': publicRepos,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
+class UserRepository {
+  final String name;
+  final String url;
 
-  /// Convert JSON string to `UserDetailsModel`
-  static UserDetailsModel fromJsonString(String jsonString) {
-    return UserDetailsModel.fromJson(json.decode(jsonString));
-  }
+  UserRepository({
+    required this.name,
+    required this.url
+  });
 
-  /// Convert `UserDetailsModel` to JSON string
-  String toJsonString() {
-    return json.encode(toJson());
+  factory UserRepository.fromJson(Map<String, dynamic> json) {
+    return UserRepository(
+      name: json['name'] ?? '',
+      url: json['url'] ?? ''
+    );
   }
 }
