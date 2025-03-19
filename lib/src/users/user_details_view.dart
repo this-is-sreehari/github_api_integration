@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'user_details_viewmodal.dart';
 
-class UserDetailsController extends GetxController {
-  var selectedIndex = 0.obs; // Observable index for tabs
-}
 
 class UserDetailsView extends StatelessWidget {
   UserDetailsView({super.key});
 
-  final UserDetailsController controller = Get.put(UserDetailsController());
+  final UserDetailsViewModel viewModel = Get.put(UserDetailsViewModel());
 
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> data = Get.arguments;
-
+    if (data["userName"] != null) viewModel.getUserDetails(data["userName"]);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -25,12 +23,12 @@ class UserDetailsView extends StatelessWidget {
               Tab(text: 'Repositories'),
             ],
             onTap: (index) {
-              controller.selectedIndex.value = index;
+              viewModel.selectedIndex.value = index;
             },
           ),
         ),
         body: Obx(() => IndexedStack(
-              index: controller.selectedIndex.value,
+              index: viewModel.selectedIndex.value,
               children: [
                 ProfileTab(data: data),
                 RepositoriesTab(),
@@ -47,6 +45,7 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Center(
       child: Text('Profile Information'),
     );
