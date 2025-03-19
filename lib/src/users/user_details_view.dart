@@ -41,7 +41,8 @@ class UserDetailsView extends StatelessWidget {
   }
 
   Widget customTab(Tabs type, String userName) {
-    return FutureBuilder(
+    return type == Tabs.profile
+      ? FutureBuilder(
       future: viewModel.getUserDetails(userName),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -139,7 +140,8 @@ class UserDetailsView extends StatelessWidget {
         }
         
       },
-    );
+    )
+    : Text('Listing repos here');
   }
 }
 
