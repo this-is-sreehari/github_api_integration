@@ -1,0 +1,6 @@
+{
+  "appTitle": "github_api_integration",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
