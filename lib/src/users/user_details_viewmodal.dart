@@ -11,12 +11,14 @@ class UserDetailsViewModel extends GetxController {
     super.onInit();
     userData.assignAll(Get.arguments ?? {});
   }
+  
 
   final dio = Dio();
 
   static const String baseURL = 'https://api.github.com'; 
 
-  void getUserDetails(String userName) async {
+  dynamic getUserDetails(String userName) async {
+    print(" -------> calling API <-------------");
     final response = await dio.get(
       '$baseURL/users/$userName',
       options: Options(
@@ -25,10 +27,6 @@ class UserDetailsViewModel extends GetxController {
           'X-GitHub-Api-Version': '2022-11-28'
       })
     );
-    if (response.statusCode == 200) {
-      final userDetails = UserDetailsModel.fromJson(response.data);
-    } else {
-      // handle 404 error
-    }
+    return {'data': response.data, 'statusCode': response.statusCode};
   }
 }
